@@ -1,4 +1,3 @@
-import { revalidateTodos } from '@/lib/actions'
 import { Button } from '@/components/ui/button'
 
 async function getTodos() {
@@ -12,13 +11,6 @@ export default async function Todos() {
 
   return (
     <section className='mt-16'>
-      <form
-        action={revalidateTodos}
-        className='flex items-center justify-between'
-      >
-        <h3 className='font-serif text-xl'>Todos</h3>
-        <Button size='sm'>Revalidate todos</Button>
-      </form>
       <div className='mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
         {todos.map((todo: any) => (
           <div key={todo.id} className='rounded bg-white p-4 shadow'>

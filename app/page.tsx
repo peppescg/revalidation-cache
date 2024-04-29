@@ -2,9 +2,12 @@ import Todos from '@/components/todos'
 import Users from '@/components/users'
 import { Button } from '@/components/ui/button'
 
-import { revalidateAll } from '@/lib/actions'
+import { getColors, getUsers, revalidateAll } from '@/lib/actions'
+import Colors from '@/components/colors'
 
 export default async function Home() {
+  const users = await getUsers()
+  const colors = await getColors()
   return (
     <section className='py-24'>
       <div className='container'>
@@ -26,8 +29,8 @@ export default async function Home() {
             </Button>
           </form>
 
-          <Users />
-          <Todos />
+          <Users users={users} />
+          <Colors colors={colors} />
         </div>
       </div>
     </section>

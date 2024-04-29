@@ -1,14 +1,11 @@
-import { revalidateUsers } from '@/lib/actions'
+'use client'
+import { revalidateAll, revalidateUsers } from '@/lib/actions'
 import { Button } from '@/components/ui/button'
 
-async function getUsers() {
-  const endpoint = 'https://64a6f5fc096b3f0fcc80e3fa.mockapi.io/api/users'
-  const response = await fetch(endpoint, { next: { tags: ['users'] } })
-  return response.json()
-}
-
-export default async function Users() {
-  const users = await getUsers()
+export default function Users({ users }: { users: any }) {
+  const handleClick = () => {
+    revalidateAll()
+  }
 
   return (
     <section className='mt-16'>
@@ -21,9 +18,15 @@ export default async function Users() {
       </form>
       <div className='mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
         {users.map((user: any) => (
-          <div key={user.id} className='rounded bg-white p-4 shadow'>
+          <div
+            key={user.id}
+            className='flex justify-between rounded bg-white p-4 shadow'
+          >
             <h3 className='font-semibold'>{user.name}</h3>
             <p className='text-sm text-gray-500'>{user.email}</p>
+            <div className='cursor-pointer text-red-400' onClick={handleClick}>
+              x
+            </div>
           </div>
         ))}
       </div>

@@ -1,10 +1,19 @@
 'use client'
-import { revalidateAll, revalidateUsers } from '@/lib/actions'
+import { deleteUser, revalidateAll, revalidateUsers } from '@/lib/actions'
 import { Button } from '@/components/ui/button'
+import { useOptimistic, useTransition } from 'react'
 
 export default function Users({ users }: { users: any }) {
-  const handleClick = () => {
-    revalidateAll()
+  const [isPending, startTransition] = useTransition()
+  const [optimisticUsers, updateUsers] = useOptimistic(
+    users,
+    (users, id: string) => users.filter((user: any) => user.id !== id)
+  )
+
+  const handleClick = async (id: string) => {
+    updateUsers(id)
+
+    await deleteUser(id)
   }
 
   return (
@@ -17,16 +26,20 @@ export default function Users({ users }: { users: any }) {
         <Button size='sm'>Revalidate users</Button>
       </form>
       <div className='mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-        {users.map((user: any) => (
+        {optimisticUsers.map((user: any) => (
           <div
             key={user.id}
             className='flex justify-between rounded bg-white p-4 shadow'
           >
             <h3 className='font-semibold'>{user.name}</h3>
             <p className='text-sm text-gray-500'>{user.email}</p>
-            <div className='cursor-pointer text-red-400' onClick={handleClick}>
+            <button
+              disabled={isPending}
+              className='cursor-pointer text-red-400'
+              onClick={() => startTransition(() => handleClick(user.id))}
+            >
               x
-            </div>
+            </button>
           </div>
         ))}
       </div>

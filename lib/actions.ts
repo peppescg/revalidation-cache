@@ -23,6 +23,13 @@ export async function getUsers() {
   return response.json()
 }
 
+export async function deleteUser(id: string) {
+  const endpoint = `https://662f72cf43b6a7dce30f870c.mockapi.io/users/${id}`
+  const response = await fetch(endpoint, { method: 'DELETE' })
+  revalidateTag('users')
+  return response.json()
+}
+
 export async function getColors() {
   const endpoint = 'https://662f72cf43b6a7dce30f870c.mockapi.io/colors'
   const response = await fetch(endpoint, { next: { tags: ['colors'] } })
